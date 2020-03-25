@@ -3,6 +3,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import viewsets
 from profiles_api import searlizers
+from profiles_api import models
+from rest_framework.authentication import TokenAuthentication
+from profiles_api import permissions
 # Create your views here.
 
 class HelloAPiView(APIView):
@@ -83,3 +86,13 @@ class HelloViewSet(viewsets.ViewSet):
 
     def destory(self, request, pk=None):
         return Response({'http_method' : 'DELETE'})
+
+
+
+class UserProfileViewset(viewsets.ModelViewSet):
+    """Handle creating and updation profiles"""
+
+    serializer_class= searlizers.UserProfileSerializer
+    queryset= models.UserProfile.objects.all()
+    authtication_classes= (TokenAuthentication,)
+    permission_classes= (permissions.UpdateOwnProfile,)
